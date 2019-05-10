@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-import scanpy.api as sc
+import scanpy as sc
 import os
 import argparse
 
@@ -42,4 +42,14 @@ if __name__ == '__main__':
         new = new.iloc[uniq_index,]
         new = new.loc[new.sum(axis=1)>0, :]
         print("Dimension of the matrix after removing non-zero rows:", new.shape)
+        new.to_hdf(args.output+".h5", key="dge", mode="w", complevel=3)
+    if args.format == 'ad':
+        adata = sc.read_h5ad(args.input)
+        new = pd.DataFrame(adata.X.todense(), index= adata.obs_names, columns=adata.var_names)
+        new.index.name = None
+        new = new.T
+        new.index.name = None
+        uniq_index = np.unique(new.index, return_index=True)[1]
+        new = new.iloc[uniq_index,]
+        new = new.loc[new.sum(axis=1)>0, :]
         new.to_hdf(args.output+".h5", key="dge", mode="w", complevel=3)
