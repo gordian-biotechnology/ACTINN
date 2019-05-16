@@ -19,9 +19,24 @@ if __name__ == '__main__':
         path = args.input
         if path[-1] != "/":
             path += "/"
-        new = sc.read(path + 'matrix.mtx', cache=True).T  # transpose the data
-        new.var_names = pd.read_csv(path + 'genes.tsv', header=None, sep='\t')[1]
-        new.obs_names = pd.read_csv(path + 'barcodes.tsv', header=None)[0]
+        for df in os.listdir(path):
+            if 'matrix.mtx' in df:
+                mat = df
+            if 'genes.tsv' in df:
+                genes = df
+            elif 'features.tsv' in df:
+                genes = df
+            if 'barcodes.tsv' in df:
+                bc = df
+        new = sc.read(os.path.join(path, mat), cache=True).T  # transpose the data
+        if '.gz' in genes:
+            new.var_names = pd.read_csv(os.path.join(path, genes), compression='gzip', header=None, sep='\t')[1]
+        else:
+            new.var_names = pd.read_csv(os.path.join(path, genes), header=None, sep='\t')[1]
+        if '.gz' in bc:
+            new.obs_names = pd.read_csv(os.path.join(path, bc), compression='gzip', header=None)[0]
+        else:
+            new.obs_names = pd.read_csv(os.path.join(path, bc), header=None)[0]
         new = pd.DataFrame(new.X.todense().transpose(), index=new.var_names, columns=new.obs_names)
         uniq_index = np.unique(new.index, return_index=True)[1]
         new = new.iloc[uniq_index,]
