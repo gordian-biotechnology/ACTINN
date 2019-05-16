@@ -32,6 +32,8 @@ def scale_sets(sets):
     for i in range(1, len(sets)):
         common_genes = set.intersection(set(sets[i].index),common_genes)
     common_genes = sorted(list(common_genes))
+    if len(common_genes) < 500:
+        sys.exit('Not enough shared genes: Verify that gene names are same format...')
     sep_point = [0]
     for i in range(len(sets)):
         sets[i] = sets[i].loc[common_genes,]
@@ -306,7 +308,7 @@ if __name__ == '__main__':
     # Read in the files
     train_set = pd.read_hdf(args.train_set, key="dge")
     train_set.index = [s.upper() for s in train_set.index]
-    train_label = pd.read_table(args.train_label, header=None)
+    train_label = pd.read_csv(args.train_label, header=None, sep='\t')
     test_set = pd.read_hdf(args.test_set, key="dge")
     test_set.index = [s.upper() for s in test_set.index]
     barcode = list(test_set.columns)
