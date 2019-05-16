@@ -23,7 +23,7 @@ python actinn_format.py -i input_file -o output_prefix -f format
 ### Paramters
 * -i	Path to the input file or the 10X directory
 * -o	Prefix of the output file
-* -f	Format of the input file (10X, txt, csv)
+* -f	Format of the input file (10X (can be v1,v2, or v3), txt, csv, ad (scanpy/anndata))
 
 ### Output
 The output will be an HDF5 formated file named after the output prefix with ".h5" extension
@@ -58,13 +58,13 @@ python actinn_predict.py -trs training_set -trl training_label -ts test_set -lr 
 * -trl	Path to the training label (the cell types for the training set), must be tab separated text file with no column and row names.
 * -ts	Path to test sets, must be HDF5 format with key "dge".
 * -lr	Learning rate (default: 0.0001). We can increase the learning rate if the cost drops too slow, or decrease the learning rate if the cost drops super fast in the beginning and starts to fluctuate in later epochs.
-* -ne	Number of epochs (default: 50). The number of epochs can be determined by looking at the cost after each epoch. If the cost starts to decrease very slowly after ceartain epoch, then the "ne" parameter should be set to that epoch number. 
+* -ne	Number of epochs (default: 50). The number of epochs can be determined by looking at the cost after each epoch. If the cost starts to decrease very slowly after ceartain epoch, then the "ne" parameter should be set to that epoch number.
 * -ms	Minibatch size (default: 128). This parameter can be set larger when training a large dataset.
 * -pc	Print cost (default: True). Whether to print cost after each 5 epochs.
 * -op Output probabilities for each cell being the cell types in the training data (default: False).
 
 ### Output
-The output will be a file named "predicted_label.txt". In the file, the first column will be the cell name, the second column will be the predicted cell type. 
+The output will be a file named "predicted_label.txt". In the file, the first column will be the cell name, the second column will be the predicted cell type.
 If the "op" parameter is set to True, there will be another output file named "predicted_probablities.txt", where columns are cells and rows are cell types. The number in row i and column j will be the probablity that cell j being cell type i.
 
 ### Example
