@@ -38,7 +38,7 @@ def scale_sets(sets):
     for i in range(len(sets)):
         sets[i] = sets[i].loc[common_genes,]
         sep_point.append(sets[i].shape[1])
-    total_set = np.array(pd.concat(sets, axis=1), dtype=np.float32)
+    total_set = np.array(pd.concat(sets, axis=1, sort=True), dtype=np.float32)
     total_set = np.divide(total_set, np.sum(total_set, axis=0, keepdims=True)) * 10000
     total_set = np.log2(total_set+1)
     expr = np.sum(total_set, axis=1)
@@ -310,6 +310,9 @@ if __name__ == '__main__':
     train_set.index = [s.upper() for s in train_set.index]
     train_label = pd.read_csv(args.train_label, header=None, sep='\t')
     test_set = pd.read_hdf(args.test_set, key="dge")
+    upper_dups = [a for a in test_set.index if (a.upper() in test_set.index and a !=a.upper())]
+    uppers_to_remove = [a.upper() for a in upper_dups]
+    test_set.drop(uppers_to_remove, axis=0, inplace=True)
     test_set.index = [s.upper() for s in test_set.index]
     barcode = list(test_set.columns)
     nt = len(set(train_label.iloc[:,1]))
