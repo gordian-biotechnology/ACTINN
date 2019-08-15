@@ -57,7 +57,7 @@ def one_hot_matrix(labels, C):
     # output -- one hot matrix with shape (# types, # samples)
     C = tf.constant(C, name = "C")
     one_hot_matrix = tf.one_hot(labels, C, axis = 0)
-    sess = tf.Session()
+    sess = tf.compat.v1.Session()
     one_hot = sess.run(one_hot_matrix)
     sess.close()
     return one_hot
@@ -90,8 +90,8 @@ def convert_type_to_label(types, type_to_label_dict):
 
 # Function to create placeholders
 def create_placeholders(n_x, n_y):
-    X = tf.placeholder(tf.float32, shape = (n_x, None))
-    Y = tf.placeholder(tf.float32, shape = (n_y, None))
+    X = tf.compat.v1.placeholder(tf.float32, shape = (n_x, None))
+    Y = tf.compat.v1.placeholder(tf.float32, shape = (n_y, None))
     return X, Y
 
 
@@ -100,15 +100,15 @@ def create_placeholders(n_x, n_y):
 def initialize_parameters(nf, ln1, ln2, ln3, nt):
     # input -- nf (# of features), ln1 (# nodes in layer1), ln2 (# nodes in layer2), nt (# types)
     # output -- a dictionary of tensors containing W1, b1, W2, b2, W3, b3
-    tf.set_random_seed(3) # set seed to make the results consistant
-    W1 = tf.get_variable("W1", [ln1, nf], initializer = tf.contrib.layers.xavier_initializer(seed = 3))
-    b1 = tf.get_variable("b1", [ln1, 1], initializer = tf.zeros_initializer())
-    W2 = tf.get_variable("W2", [ln2, ln1], initializer = tf.contrib.layers.xavier_initializer(seed = 3))
-    b2 = tf.get_variable("b2", [ln2, 1], initializer = tf.zeros_initializer())
-    W3 = tf.get_variable("W3", [ln3, ln2], initializer = tf.contrib.layers.xavier_initializer(seed = 3))
-    b3 = tf.get_variable("b3", [ln3, 1], initializer = tf.zeros_initializer())
-    W4 = tf.get_variable("W4", [nt, ln3], initializer = tf.contrib.layers.xavier_initializer(seed = 3))
-    b4 = tf.get_variable("b4", [nt, 1], initializer = tf.zeros_initializer())
+    tf.compat.v1.set_random_seed(3) # set seed to make the results consistant
+    W1 = tf.compat.v1.get_variable("W1", [ln1, nf], initializer = tf.compat.v1.initializers.glorot_normal(seed = 3))
+    b1 = tf.compat.v1.get_variable("b1", [ln1, 1], initializer = tf.zeros_initializer())
+    W2 = tf.compat.v1.get_variable("W2", [ln2, ln1], initializer = tf.compat.v1.initializers.glorot_normal(seed = 3))
+    b2 = tf.compat.v1.get_variable("b2", [ln2, 1], initializer = tf.zeros_initializer())
+    W3 = tf.compat.v1.get_variable("W3", [ln3, ln2], initializer = tf.compat.v1.initializers.glorot_normal(seed = 3))
+    b3 = tf.compat.v1.get_variable("b3", [ln3, 1], initializer = tf.zeros_initializer())
+    W4 = tf.compat.v1.get_variable("W4", [nt, ln3], initializer = tf.compat.v1.initializers.glorot_normal(seed = 3))
+    b4 = tf.compat.v1.get_variable("b4", [nt, 1], initializer = tf.zeros_initializer())
     parameters = {"W1": W1, "b1": b1, "W2": W2, "b2": b2, "W3": W3, "b3": b3, "W4": W4, "b4": b4}
     return parameters
 
@@ -128,13 +128,13 @@ def forward_propagation(X, parameters):
     W4 = parameters['W4']
     b4 = parameters['b4']
     # forward calculations
-    Z1 = tf.add(tf.matmul(W1, X), b1)
-    A1 = tf.nn.relu(Z1)
-    Z2 = tf.add(tf.matmul(W2, A1), b2)
-    A2 = tf.nn.relu(Z2)
-    Z3 = tf.add(tf.matmul(W3, A2), b3)
-    A3 = tf.nn.relu(Z3)
-    Z4 = tf.add(tf.matmul(W4, A3), b4)
+    Z1 = tf.compat.v1.add(tf.compat.v1.matmul(W1, X), b1)
+    A1 = tf.compat.v1.nn.relu(Z1)
+    Z2 = tf.compat.v1.add(tf.compat.v1.matmul(W2, A1), b2)
+    A2 = tf.compat.v1.nn.relu(Z2)
+    Z3 = tf.compat.v1.add(tf.compat.v1.matmul(W3, A2), b3)
+    A3 = tf.compat.v1.nn.relu(Z3)
+    Z4 = tf.compat.v1.add(tf.compat.v1.matmul(W4, A3), b4)
     return Z4
 
 
@@ -191,13 +191,13 @@ def forward_propagation_for_predict(X, parameters):
     b3 = parameters['b3']
     W4 = parameters['W4']
     b4 = parameters['b4']
-    Z1 = tf.add(tf.matmul(W1, X), b1)
-    A1 = tf.nn.relu(Z1)
-    Z2 = tf.add(tf.matmul(W2, A1), b2)
-    A2 = tf.nn.relu(Z2)
-    Z3 = tf.add(tf.matmul(W3, A2), b3)
-    A3 = tf.nn.relu(Z3)
-    Z4 = tf.add(tf.matmul(W4, A3), b4)
+    Z1 = tf.compat.v1.add(tf.compat.v1.matmul(W1, X), b1)
+    A1 = tf.compat.v1.nn.relu(Z1)
+    Z2 = tf.compat.v1.add(tf.compat.v1.matmul(W2, A1), b2)
+    A2 = tf.compat.v1.nn.relu(Z2)
+    Z3 = tf.compat.v1.add(tf.compat.v1.matmul(W3, A2), b3)
+    A3 = tf.compat.v1.nn.relu(Z3)
+    Z4 = tf.compat.v1.add(tf.compat.v1.matmul(W4, A3), b4)
     return Z4
 
 
@@ -215,11 +215,12 @@ def predict(X, parameters):
     W4 = tf.convert_to_tensor(parameters["W4"])
     b4 = tf.convert_to_tensor(parameters["b4"])
     params = {"W1": W1, "b1": b1, "W2": W2, "b2": b2, "W3": W3, "b3": b3, "W4": W4, "b4": b4}
-    x = tf.placeholder("float")
+    x = tf.compat.v1.placeholder(tf.float32, shape=X.shape)
     z4 = forward_propagation_for_predict(x, params)
     p = tf.argmax(z4)
-    sess = tf.Session()
+    sess = tf.compat.v1.Session()
     prediction = sess.run(p, feed_dict = {x: X})
+    sess.close()
     return prediction
 
 
@@ -236,11 +237,12 @@ def predict_probability(X, parameters):
     W4 = tf.convert_to_tensor(parameters["W4"])
     b4 = tf.convert_to_tensor(parameters["b4"])
     params = {"W1": W1, "b1": b1, "W2": W2, "b2": b2, "W3": W3, "b3": b3, "W4": W4, "b4": b4}
-    x = tf.placeholder("float")
+    x = tf.compat.v1.placeholder(tf.float32, shape=X.shape)
     z4 = forward_propagation_for_predict(x, params)
-    p = tf.nn.softmax(z4, axis=0)
-    sess = tf.Session()
+    p = tf.compat.v1.nn.softmax(z4, axis=0)
+    sess = tf.compat.v1.Session()
     prediction = sess.run(p, feed_dict = {x: X})
+    sess.close()
     return prediction
 
 
@@ -250,7 +252,7 @@ def model(X_train, Y_train, X_test, starting_learning_rate = 0.0001, num_epochs 
     # input -- X_train (training set), Y_train(training labels), X_test (test set), Y_test (test labels),
     # output -- trained parameters
     ops.reset_default_graph() # to be able to rerun the model without overwriting tf variables
-    tf.set_random_seed(3)
+    tf.compat.v1.set_random_seed(3)
     seed = 3
     (nf, ns) = X_train.shape
     nt = Y_train.shape[0]
@@ -265,14 +267,14 @@ def model(X_train, Y_train, X_test, starting_learning_rate = 0.0001, num_epochs 
     cost = compute_cost(Z4, Y, parameters, 0.005)
     # Use learning rate decay
     global_step = tf.Variable(0, trainable=False)
-    learning_rate = tf.train.exponential_decay(starting_learning_rate, global_step, 1000, 0.95, staircase=True)
+    learning_rate = tf.compat.v1.train.exponential_decay(starting_learning_rate, global_step, 1000, 0.95, staircase=True)
     # backpropagation: define the tensorflow optimizer, AdamOptimizer is used.
-    optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
+    optimizer = tf.compat.v1.train.AdamOptimizer (learning_rate=learning_rate)
     trainer = optimizer.minimize(cost, global_step=global_step)
     # initialize all the variables
-    init = tf.global_variables_initializer()
+    init = tf.compat.v1.global_variables_initializer()
     # start the session to compute the tensorflow graph
-    with tf.Session() as sess:
+    with tf.compat.v1.Session() as sess:
         # run the initialization
         sess.run(init)
         # do the training loop
